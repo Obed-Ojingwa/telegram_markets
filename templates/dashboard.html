@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <h2>Players</h2>
+    <ul id="player-list">
+        {% for player in players %}
+            <li>{{ player.username }}: {{ player.balance }} Tele Tokens</li>
+        {% endfor %}
+    </ul>
+    <h2>Assets</h2>
+    <ul id="asset-list">
+        {% for asset in assets %}
+            <li>{{ asset.symbol }}: {{ asset.price }} Tele Tokens</li>
+        {% endfor %}
+    </ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+    <script>
+        var socket = io();
+        socket.on('update', function(data) {
+            var assetList = document.getElementById('asset-list');
+            assetList.innerHTML = '';
+            data.assets.forEach(function(asset) {
+                var listItem = document.createElement('li');
+                listItem.textContent = asset[0] + ': ' + asset[1] + ' Tele Tokens';
+                assetList.appendChild(listItem);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
